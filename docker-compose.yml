@@ -1,0 +1,33 @@
+version: "3.7"
+
+services:
+  database:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    volumes:
+      - database-volume:/var/lib/postgresql/data
+    networks:
+      - local-network
+
+  backend:
+    container_name: bosta-api-prod
+    image: bosta-api-task:prod-v1
+    environment:
+      DATABASE_URL: postgresql://postgres:mysecretpassword@database:5432/library?schema=public
+    build:
+      context: .
+      target: production
+      dockerfile: ./Dockerfile
+    command: bash -c "chmod +x ./entrypoint.sh && ./entrypoint.sh"
+    ports:
+      - 3000:3000
+    networks:
+      - local-network
+
+volumes:
+  database-volume:
+
+networks:
+  local-network:
