@@ -10,7 +10,7 @@ services:
       context: .
       target: development
       dockerfile: ./Dockerfile
-    command: bash -c "chmod +x ./entrypoint.sh && ./entrypoint.sh"
+    command: bash -c "chmod +x ./entrypoint.sh && ./entrypoint.sh --dev"
     ports:
       - 3000:3000
     networks:
