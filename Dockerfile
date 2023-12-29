@@ -16,7 +16,6 @@ COPY . .
 RUN npx prisma generate
 RUN npm run build
 
-
 FROM node:18.12.1-alpine as production 
 
 ARG NODE_ENV=production
