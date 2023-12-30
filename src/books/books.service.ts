@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBookDto, UpdateBookDto } from './dto/create-book.dto';
+import { CreateBookDto, UpdateBookDto } from './dto/book.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -26,11 +26,19 @@ export class BooksService {
   }
 
   async findOne(id: number) {
-    return this.prisma.book.findUnique({
+    const book = await this.prisma.book.findUnique({
       where: {
         id,
       }
-    })
+    });
+
+    const borrowedBooks = 0;
+    const availableQuantity = book.totalQuantity - borrowedBooks;
+
+    return {
+      ...book,
+      availableQuantity,
+    }
   }
 
   async update(id: number, book: UpdateBookDto) {
