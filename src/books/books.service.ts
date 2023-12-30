@@ -9,8 +9,18 @@ export class BooksService {
     private readonly prisma: PrismaService,
   ) {}
 
-  create(book: CreateBookDto) {
-    return 'This action adds a new book';
+  async create(book: CreateBookDto) {
+    // TODO: Check if author id exists
+    const createdBook = await this.prisma.book.create({
+      data: {
+        title: book.title,
+        isbn: book.isbn,
+        totalQuantity: book.totalQuantity,
+        shelfLocation: book.shelfLocation,
+        authorId: book.authorId,
+      }
+    });
+    return createdBook;
   }
 
   async findAll() {
