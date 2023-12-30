@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, NotFoundException, HttpCode, BadRequestException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, NotFoundException, HttpCode, BadRequestException, ParseIntPipe, Query, DefaultValuePipe } from '@nestjs/common';
 import { BorrowersService } from './borrowers.service';
 import { CreateBorrowerDto, UpdateBorrowerDto } from './dto/borrower.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
+import { Pagination } from 'src/common/dto/pagination';
 
 @Controller('borrowers')
 export class BorrowersController {
@@ -24,10 +25,18 @@ export class BorrowersController {
 
   @Get()
   @UseInterceptors(ResponseTransform)
-  async findAll() {
-    const borrowers = await this.borrowersService.findAll();
+  async findAll(
+    @Query('page', new DefaultValuePipe(1) , ParseIntPipe) page: number,
+    @Query('size', new DefaultValuePipe(10) , ParseIntPipe) size: number,
+  ) {
+    const {borrowers, count} = await this.borrowersService.findAll(
+      page,
+      size
+    );
+    const pagination = new Pagination(count, {page, size})
     return {
       borrowers,
+      pagination,
     }
   }
 

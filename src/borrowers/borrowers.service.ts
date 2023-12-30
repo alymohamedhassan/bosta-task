@@ -17,8 +17,13 @@ export class BorrowersService {
     });
   }
 
-  async findAll() {
-    return this.prisma.borrower.findMany();
+  async findAll(page: number = 1, size: number = 10) {
+    const borrowers = await this.prisma.borrower.findMany({
+      skip: size * (page-1),
+      take: size,
+    });
+    const count = await this.prisma.borrower.count()
+    return {borrowers, count}
   }
 
   async findOne(id: number) {
