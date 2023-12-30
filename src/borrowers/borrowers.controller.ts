@@ -9,6 +9,7 @@ export class BorrowersController {
 
   @Post()
   @UseInterceptors(ResponseTransform)
+  @HttpCode(201)
   async create(@Body() body: CreateBorrowerDto) {
     const borrower = await this.borrowersService.create(body);
 
