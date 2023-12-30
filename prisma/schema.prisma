@@ -21,7 +21,7 @@ model book {
   isbn          String @unique
   shelfLocation String
 
-  availableQuantity Int
+  totalQuantity Int
   createdAt         DateTime
 
   author   author @relation(fields: [authorId], references: [id])
