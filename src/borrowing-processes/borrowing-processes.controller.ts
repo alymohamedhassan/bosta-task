@@ -44,8 +44,8 @@ export class BorrowingProcessesController {
 
   @Get()
   @UseInterceptors(ResponseTransform)
-  findAll(@Query('is_overdue', new DefaultValuePipe(false), new ParseBoolPipe({optional: true})) isOverdue?: boolean) {
-    return this.borrowingProcessesService.findAll(isOverdue);
+  findAll(@Query('is_overdue_only', new DefaultValuePipe(false), new ParseBoolPipe({optional: true})) isOverdueOnly?: boolean) {
+    return this.borrowingProcessesService.findAll(isOverdueOnly);
   }
 
 }
