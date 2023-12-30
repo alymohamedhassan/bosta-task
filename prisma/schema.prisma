@@ -23,9 +23,9 @@ model book {
 
   totalQuantity Int
 
-  author   author @relation(fields: [authorId], references: [id])
-  authorId Int
-  createdAt     DateTime @default(now())
+  author    author   @relation(fields: [authorId], references: [id])
+  authorId  Int
+  createdAt DateTime @default(now())
 
   borrowings borrowing[]
 }
@@ -51,5 +51,6 @@ model borrowing {
   borrowingDate DateTime
   returnDate    DateTime
 
-  createdAt DateTime @default(now())
+  isReturned Boolean  @default(false)
+  createdAt  DateTime @default(now())
 }
