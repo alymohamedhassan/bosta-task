@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, NotFoundException, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, NotFoundException, HttpCode, BadRequestException, ParseIntPipe } from '@nestjs/common';
 import { BorrowersService } from './borrowers.service';
 import { CreateBorrowerDto, UpdateBorrowerDto } from './dto/borrower.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
@@ -11,6 +11,11 @@ export class BorrowersController {
   @UseInterceptors(ResponseTransform)
   @HttpCode(201)
   async create(@Body() body: CreateBorrowerDto) {
+    const exists = await this.borrowersService.existsByEmail(body.email);
+    console.log("existsByEmail:", exists)
+    if (exists) 
+      throw new BadRequestException("Borrower already exists, duplicate record (email) has to be unique")
+
     const borrower = await this.borrowersService.create(body);
 
     return {
@@ -29,7 +34,7 @@ export class BorrowersController {
 
   @Get(':id')
   @UseInterceptors(ResponseTransform)
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ParseIntPipe) id: string) {
     const exists = await this.borrowersService.existsById(+id);
     if (!exists)
       throw new NotFoundException("Borrower not found")
@@ -43,7 +48,7 @@ export class BorrowersController {
   @Patch(':id')
   @UseInterceptors(ResponseTransform)
   @HttpCode(204)
-  async update(@Param('id') id: string, @Body() body: UpdateBorrowerDto) {
+  async update(@Param('id', ParseIntPipe) id: string, @Body() body: UpdateBorrowerDto) {
     const exists = await this.borrowersService.existsById(+id);
     if (!exists) 
       throw new NotFoundException("Borrower not found")
@@ -54,7 +59,7 @@ export class BorrowersController {
   @Delete(':id')
   @UseInterceptors(ResponseTransform)
   @HttpCode(204)
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id', ParseIntPipe) id: string) {
     const exists = await this.borrowersService.existsById(+id);
     if (!exists) 
       throw new NotFoundException("Borrower not found")

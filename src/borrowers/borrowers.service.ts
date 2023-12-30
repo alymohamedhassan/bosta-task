@@ -57,4 +57,13 @@ export class BorrowersService {
     })
     return count > 0;
   }
+
+  async existsByEmail(email: string) {
+    const count = await this.prisma.borrower.count({
+      where: {
+        email: email,
+      }
+    });
+    return count > 0;
+  }
 }
