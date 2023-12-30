@@ -22,10 +22,10 @@ model book {
   shelfLocation String
 
   totalQuantity Int
-  createdAt         DateTime
 
   author   author @relation(fields: [authorId], references: [id])
   authorId Int
+  createdAt     DateTime @default(now())
 
   borrowings borrowing[]
 }
@@ -35,7 +35,7 @@ model borrower {
   name         String
   email        String   @unique
   passwordHash String
-  registeredAt DateTime
+  createdAt    DateTime @default(now())
 
   borrowings borrowing[]
 }
@@ -50,6 +50,6 @@ model borrowing {
 
   borrowingDate DateTime
   returnDate    DateTime
+
+  createdAt DateTime @default(now())
 }
-
-
