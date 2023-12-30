@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -58,11 +58,11 @@ export class AuthorsService {
     const count = await this.prisma.author.count({
       where: {
         name,
-        id: {
+        id: exceptId? {
           not: {
             equals: +exceptId,
           }
-        }
+        }: undefined,
       }
     });
     return count > 0;
