@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
 import { AuthorsService } from './authors.service';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
 import { CreateAuthorDto } from './dto/create-author.dto';
@@ -9,7 +9,12 @@ export class AuthorsController {
 
   @Post()
   @UseInterceptors(ResponseTransform)
+  @HttpCode(201)
   async create(@Body() author: CreateAuthorDto) {
+    const exists = await this.authorsService.existsByName(author.name);
+    if (exists) 
+      throw new NotFoundException("Author Name already exists")
+
     return {
       book: await this.authorsService.create(author),
     }
@@ -35,7 +40,12 @@ export class AuthorsController {
 
   @Patch(':id')
   @UseInterceptors(ResponseTransform)
+  @HttpCode(204)
   async update(@Param('id') id: number, @Body() author: CreateAuthorDto) {
+    const exists = await this.authorsService.existsByName(author.name, +id);
+    if (exists) 
+      throw new NotFoundException("Author name already exists")
+
     const updatedAuthor = await this.authorsService.update(+id, author)
     return {
       author: updatedAuthor,
@@ -44,7 +54,11 @@ export class AuthorsController {
 
   @Delete(':id')
   @UseInterceptors(ResponseTransform)
+  @HttpCode(204)
   async delete(@Param('id') id: number) {
+    const exists = await this.authorsService.existsById(+id);
+    if (!exists)
+      throw new NotFoundException("Author Does not exist")
     await this.authorsService.delete(+id)
   }
 

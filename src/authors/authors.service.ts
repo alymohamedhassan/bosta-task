@@ -7,10 +7,6 @@ export class AuthorsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(author: CreateAuthorDto) {
-    const exists = await this.existsByName(author.name);
-
-    if (exists) throw new NotFoundException("Author Name already exists")
-
     return this.prisma.author.create({
       data: {
         name: author.name,
@@ -31,9 +27,6 @@ export class AuthorsService {
   }
 
   async update(id: number, author: CreateAuthorDto) {
-    const exists = await this.existsByName(author.name, +id);
-    if (exists) throw new NotFoundException("Author name already exists")
-
     return this.prisma.author.update({
       where: {
         id: +id,
