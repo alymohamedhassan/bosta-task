@@ -12,7 +12,6 @@ export class BorrowersController {
   @HttpCode(201)
   async create(@Body() body: CreateBorrowerDto) {
     const exists = await this.borrowersService.existsByEmail(body.email);
-    console.log("existsByEmail:", exists)
     if (exists) 
       throw new BadRequestException("Borrower already exists, duplicate record (email) has to be unique")
 
