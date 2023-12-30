@@ -13,6 +13,7 @@ export class BooksController {
 
   @Post()
   @UseInterceptors(ResponseTransform)
+  @HttpCode(201)
   async create(@Body() book: CreateBookDto) {
     const authorIdExists = await this.authorService.existsById(book.authorId);
     if (!authorIdExists)
