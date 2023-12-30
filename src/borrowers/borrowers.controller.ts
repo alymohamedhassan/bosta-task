@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { BorrowersService } from './borrowers.service';
-import { CreateBorrowerDto } from './dto/create-borrower.dto';
-import { UpdateBorrowerDto } from './dto/update-borrower.dto';
+import { CreateBorrowerDto, UpdateBorrowerDto } from './dto/borrower.dto';
 
 @Controller('borrowers')
 export class BorrowersController {
