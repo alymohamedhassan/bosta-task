@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, NotFoundException, BadRequestException, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, NotFoundException, BadRequestException, HttpCode, Query, ParseIntPipe, DefaultValuePipe } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto, UpdateBookDto } from './dto/book.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
@@ -28,8 +28,18 @@ export class BooksController {
 
   @Get()
   @UseInterceptors(ResponseTransform)
-  async findAll() {
-    const books = await this.booksService.findAll();
+  async findAll(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('size', new DefaultValuePipe(10), ParseIntPipe) size: number,
+    @Query('search') search: string, 
+  ) {
+    console.log(`Page: ${page}, size: ${size}, search: ${search}`)
+    const books = await this.booksService.findAll(
+      page,
+      size,
+      search
+    );
+
     return {
       books,
     }
