@@ -10,7 +10,7 @@ datasource db {
 model author {
   id        Int      @id @default(autoincrement())
   name      String   @unique
-  createdAt DateTime
+  createdAt DateTime @default(now())
 
   book book[]
 }
