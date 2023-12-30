@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateBorrowingProcessDto, UpdateBorrowingProcessDto } from './dto/borrowing-process.dto';
+import { trace } from 'console';
 
 @Injectable()
 export class BorrowingProcessesService {
@@ -24,7 +25,11 @@ export class BorrowingProcessesService {
     });
   }
 
-  findAll(isOverdueOnly: boolean, borrowerId?: number) {
+  async findAll(
+    isOverdueOnly: boolean,
+    borrowerId?: number,
+    dates?: {startDate?: Date, endDate?: Date},
+  ) {
     const isOverdueCondition = {
       isReturned: false,
       returnDate: {
@@ -37,9 +42,34 @@ export class BorrowingProcessesService {
     if (isOverdueOnly) where = {...isOverdueCondition}
     if (borrowerId) where = {...where, borrowerId,}
 
-    return this.prisma.borrowing.findMany({
+    if (dates?.startDate && dates?.endDate) 
+      where = {
+        ...where, 
+        borrowingDate: {
+          gte: new Date(dates?.startDate),
+          lte: new Date(dates?.endDate),
+        }
+      }
+
+    const borrowings = await this.prisma.borrowing.findMany({
+      include: {
+        book: true,
+        borrower: true,
+      },
       where,
     });
+    return borrowings.map((borrowing) => {
+      return {
+        id: borrowing.id,
+        bookId: borrowing.bookId,
+        bookName: borrowing.book.title,
+        borrowerId: borrowing.borrowerId,
+        borrowerName: borrowing.borrower.name,
+        returnDate: borrowing.returnDate,
+        borrowingDate: borrowing.borrowingDate,
+        isReturned: borrowing.isReturned,
+      }
+    })
   }
 
   async exists(id: number) {
