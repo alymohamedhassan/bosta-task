@@ -45,7 +45,13 @@ export class BorrowingProcessesController {
 
   @Get()
   @UseInterceptors(ResponseTransform)
-  async findAll(@Query('is_overdue_only', new DefaultValuePipe(false), new ParseBoolPipe({optional: true})) isOverdueOnly?: boolean) {
+  async findAll(
+    @Query(
+      'is_overdue_only', 
+      new DefaultValuePipe(false), 
+      new ParseBoolPipe({optional: true})
+    ) isOverdueOnly?: boolean,
+  ) {
     const borrowingProcesses = await this.borrowingProcessesService.findAll(isOverdueOnly);
     return {
       borrowingProcesses,
