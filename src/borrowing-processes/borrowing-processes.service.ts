@@ -24,7 +24,7 @@ export class BorrowingProcessesService {
     });
   }
 
-  findAll(isOverdueOnly: boolean) {
+  findAll(isOverdueOnly: boolean, borrowerId?: number) {
     const isOverdueCondition = {
       isReturned: false,
       returnDate: {
@@ -32,8 +32,13 @@ export class BorrowingProcessesService {
       }
     }
 
+    let where = {};
+
+    if (isOverdueOnly) where = {...isOverdueCondition}
+    if (borrowerId) where = {...where, borrowerId,}
+
     return this.prisma.borrowing.findMany({
-      where: isOverdueOnly? isOverdueCondition: undefined,
+      where,
     });
   }
 
