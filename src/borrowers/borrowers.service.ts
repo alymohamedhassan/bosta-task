@@ -22,7 +22,11 @@ export class BorrowersService {
   }
 
   async findOne(id: number) {
-    return `This action returns a #${id} borrower`;
+    return this.prisma.borrower.findUnique({
+      where: {
+        id: +id,
+      }
+    });
   }
 
   async update(id: number, updateBorrowerDto: UpdateBorrowerDto) {
@@ -31,5 +35,14 @@ export class BorrowersService {
 
   async remove(id: number) {
     return `This action removes a #${id} borrower`;
+  }
+
+  async existsById(id: number) {
+    const count = await this.prisma.borrower.count({
+      where: {
+        id: +id,
+      }
+    })
+    return count > 0;
   }
 }
