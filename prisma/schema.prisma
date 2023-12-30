@@ -13,6 +13,8 @@ model author {
   createdAt DateTime @default(now())
 
   book book[]
+
+  @@index([name])
 }
 
 model book {
@@ -28,6 +30,8 @@ model book {
   createdAt DateTime @default(now())
 
   borrowings borrowing[]
+
+  @@index([title, isbn, authorId])
 }
 
 model borrower {
