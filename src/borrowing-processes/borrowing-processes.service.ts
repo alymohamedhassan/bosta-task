@@ -57,6 +57,9 @@ export class BorrowingProcessesService {
         borrower: true,
       },
       where,
+      orderBy: {
+        id: 'asc',
+      }
     });
     return borrowings.map((borrowing) => {
       return {

@@ -60,17 +60,32 @@ export class BorrowingProcessesController {
 
   @Get('/export')
   async export(
+    @Query('report', new DefaultValuePipe('timeframe')) report: string,
     @Query('start_date') startDate: Date,
     @Query('end_date') endDate: Date,
     @Res() res: any,
   ) {
-    const borrowingProcesses = await this.borrowingProcessesService.findAll(
-      null, 
-      null,
-      {
+    let timeframe = {}
+    if (report === "timeframe") {
+      timeframe = {
         startDate,
         endDate,
       }
+    }
+
+    if (report !== "timeframe") {
+      const now = new Date();
+      const lastMonth = new Date(new Date().setDate(now.getDate() - 30))
+      timeframe = {
+        startDate: lastMonth,
+        endDate: now,
+      }
+    }
+
+    const borrowingProcesses = await this.borrowingProcessesService.findAll(
+      report === "is_overdue_only"? true: undefined, 
+      null,
+      timeframe, 
     );
 
     const workbook = new  Workbook()
