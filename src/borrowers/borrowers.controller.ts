@@ -4,6 +4,7 @@ import { CreateBorrowerDto, UpdateBorrowerDto } from './dto/borrower.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
 import { throws } from 'assert';
 import { NotEquals } from 'class-validator';
+import e from 'express';
 
 @Controller('borrowers')
 export class BorrowersController {
@@ -45,6 +46,10 @@ export class BorrowersController {
   @UseInterceptors(ResponseTransform)
   @HttpCode(204)
   async update(@Param('id') id: string, @Body() body: UpdateBorrowerDto) {
+    const exists = await this.borrowersService.existsById(+id);
+    if (!exists) 
+      throw new NotFoundException("Borrower not found")
+
     return this.borrowersService.update(+id, body);
   }
 
@@ -52,6 +57,10 @@ export class BorrowersController {
   @UseInterceptors(ResponseTransform)
   @HttpCode(204)
   async delete(@Param('id') id: string) {
-    return this.borrowersService.remove(+id);
+    const exists = await this.borrowersService.existsById(+id);
+    if (!exists) 
+      throw new NotFoundException("Borrower not found")
+
+    return this.borrowersService.delete(+id);
   }
 }
