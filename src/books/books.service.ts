@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
+import { CreateBookDto, UpdateBookDto } from './dto/create-book.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -10,7 +9,6 @@ export class BooksService {
   ) {}
 
   async create(book: CreateBookDto) {
-    // TODO: Check if author id exists
     const createdBook = await this.prisma.book.create({
       data: {
         title: book.title,
@@ -24,30 +22,72 @@ export class BooksService {
   }
 
   async findAll() {
-    const books = await this.prisma.book.findMany();
-    return {
-      books,
-    };
+    return this.prisma.book.findMany();
   }
 
   async findOne(id: number) {
-    const book = await this.prisma.book.findUnique({
+    return this.prisma.book.findUnique({
       where: {
         id,
       }
     })
-
-    // TODO: add exception if book not found
-    return {
-      book,
-    };
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
-    return `This action updates a #${id} book`;
+  async update(id: number, book: UpdateBookDto) {
+    const updatedBook = await this.prisma.book.update({
+      where: {
+        id: +id,
+      },
+      data: {
+        title: book?.title,
+        isbn: book?.isbn,
+        authorId: book?.authorId,
+        shelfLocation: book?.shelfLocation,
+        totalQuantity: book?.totalQuantity,
+      }
+    })
+    return updatedBook;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} book`;
+  async delete(id: number) {
+    return this.prisma.book.delete({
+      where: {
+        id: +id,
+      },
+    });
+  }
+
+  async existsById(id: number) {
+    const count = await this.prisma.book.count({
+      where: {
+        id: +id,
+      }
+    })
+    return count > 0;
+  }
+
+  async existsByTitle(title: string) {
+    const count = await this.prisma.book.count({
+      where: {
+        title,
+      }
+    })
+    return count > 0;
+  }
+
+  async exists(book: CreateBookDto) {
+    const count = await this.prisma.book.count({
+      where: {
+        OR: [
+          {
+            title: book.title,
+          },
+          {
+            isbn: book.isbn,
+          },
+        ]
+      }
+    })
+    return count > 0;
   }
 }
