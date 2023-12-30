@@ -29,8 +29,16 @@ export class BorrowersService {
     });
   }
 
-  async update(id: number, updateBorrowerDto: UpdateBorrowerDto) {
-    return `This action updates a #${id} borrower`;
+  async update(id: number, borrower: UpdateBorrowerDto) {
+    return this.prisma.borrower.update({
+      where: {
+        id: +id,
+      },
+      data: {
+        name: borrower?.name,
+        email: borrower?.email
+      }
+    });
   }
 
   async remove(id: number) {
