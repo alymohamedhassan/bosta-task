@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, NotFoundException, HttpCode, BadRequestException, ParseIntPipe, Query, DefaultValuePipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, NotFoundException, HttpCode, BadRequestException, ParseIntPipe, Query, DefaultValuePipe, Req, ForbiddenException } from '@nestjs/common';
 import { BorrowersService } from './borrowers.service';
 import { CreateBorrowerDto, UpdateBorrowerDto } from './dto/borrower.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
@@ -59,7 +59,11 @@ export class BorrowersController {
 
   @Get(':id/borrowings')
   @UseInterceptors(ResponseTransform)
-  async findBorrowings(@Param('id', ParseIntPipe) id: string) {
+  async findBorrowings(@Param('id', ParseIntPipe) id: string, @Req() request: any) {
+    const authBorrower: {id: number, email: string} = request.borrower;
+    if (authBorrower.id !== +id)
+      throw new ForbiddenException()
+
     const exists = await this.borrowersService.existsById(+id);
     if (!exists)
       throw new NotFoundException("Borrower not found")
