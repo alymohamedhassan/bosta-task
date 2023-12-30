@@ -1,25 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBorrowerDto, UpdateBorrowerDto } from './dto/borrower.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class BorrowersService {
-  create(createBorrowerDto: CreateBorrowerDto) {
-    return 'This action adds a new borrower';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(borrower: CreateBorrowerDto) {
+    const passwordHash = borrower.password;
+    return this.prisma.borrower.create({
+      data: {
+        name: borrower.name,
+        email: borrower.email,
+        passwordHash: passwordHash,
+      }
+    });
   }
 
-  findAll() {
-    return `This action returns all borrowers`;
+  async findAll() {
+    return this.prisma.borrower.findMany();
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return `This action returns a #${id} borrower`;
   }
 
-  update(id: number, updateBorrowerDto: UpdateBorrowerDto) {
+  async update(id: number, updateBorrowerDto: UpdateBorrowerDto) {
     return `This action updates a #${id} borrower`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} borrower`;
   }
 }
