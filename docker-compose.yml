@@ -19,6 +19,8 @@ services:
     image: bosta-api-task:prod-v1
     environment:
       DATABASE_URL: postgresql://postgres:example@database:5432/library?schema=public
+      REDIS_URL: redis://redis:6379
+      RATE_LIMIT_CHECKOUT: 10
     build:
       context: .
       target: production
@@ -28,6 +30,14 @@ services:
       - 3000:3000
     networks:
       - local-network
+
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    networks:
+      - local-network
+
 
 volumes:
   database-volume:
