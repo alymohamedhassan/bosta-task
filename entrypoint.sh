@@ -34,6 +34,9 @@ case $key in
 esac
 done
 
+npx prisma generate
+npx prisma migrate deploy
+
 if [ -n "${DEV}" ]
 then
   echo "development server is running..."
