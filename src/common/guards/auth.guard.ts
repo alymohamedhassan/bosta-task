@@ -2,6 +2,7 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Buffer } from 'buffer';
 import { Observable } from 'rxjs';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { routeMatching } from '../utils/route-matching';
 
 const allowedRoutes = [
   {
@@ -13,17 +14,6 @@ const allowedRoutes = [
     methods: ['GET', 'POST', 'PATCH', 'DELETE']
   },
 ]
-
-export const routeMatching = (request: any, allowedRoutes: any[]) => {
-  const isRouteMatch = allowedRoutes.some((route) => {
-    const isPAthMatch = request.route?.path.includes(route.path);
-    const isMethodMatch =
-      !route.methods || route.methods.includes(request.method);
-    return isPAthMatch && isMethodMatch;
-  });
-
-  return isRouteMatch;
-};
 
 @Injectable()
 export class AuthGuard implements CanActivate {
