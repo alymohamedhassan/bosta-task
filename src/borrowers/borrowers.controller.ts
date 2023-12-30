@@ -3,10 +3,14 @@ import { BorrowersService } from './borrowers.service';
 import { CreateBorrowerDto, UpdateBorrowerDto } from './dto/borrower.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
 import { Pagination } from 'src/common/dto/pagination';
+import { BorrowingProcessesService } from 'src/borrowing-processes/borrowing-processes.service';
 
 @Controller('borrowers')
 export class BorrowersController {
-  constructor(private readonly borrowersService: BorrowersService) {}
+  constructor(
+    private readonly borrowersService: BorrowersService,
+    private readonly borrowingsService: BorrowingProcessesService,
+  ) {}
 
   @Post()
   @UseInterceptors(ResponseTransform)
@@ -48,6 +52,19 @@ export class BorrowersController {
       throw new NotFoundException("Borrower not found")
 
     const borrower = await this.borrowersService.findOne(+id);
+    return {
+      borrower,
+    }
+  }
+
+  @Get(':id/borrowings')
+  @UseInterceptors(ResponseTransform)
+  async findBorrowings(@Param('id', ParseIntPipe) id: string) {
+    const exists = await this.borrowersService.existsById(+id);
+    if (!exists)
+      throw new NotFoundException("Borrower not found")
+
+    const borrower = await this.borrowingsService.findAll(false, +id);
     return {
       borrower,
     }
