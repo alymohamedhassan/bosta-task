@@ -2,9 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Not
 import { BorrowersService } from './borrowers.service';
 import { CreateBorrowerDto, UpdateBorrowerDto } from './dto/borrower.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
-import { throws } from 'assert';
-import { NotEquals } from 'class-validator';
-import e from 'express';
 
 @Controller('borrowers')
 export class BorrowersController {
