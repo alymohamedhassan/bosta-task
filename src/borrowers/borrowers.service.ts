@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBorrowerDto } from './dto/create-borrower.dto';
-import { UpdateBorrowerDto } from './dto/update-borrower.dto';
+import { CreateBorrowerDto, UpdateBorrowerDto } from './dto/borrower.dto';
 
 @Injectable()
 export class BorrowersService {
