@@ -1,14 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, Put, ParseIntPipe, Query, ParseBoolPipe, DefaultValuePipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Req, NotFoundException, UseInterceptors, Put, ParseIntPipe, Query, ParseBoolPipe, DefaultValuePipe } from '@nestjs/common';
 import { BorrowingProcessesService } from './borrowing-processes.service';
-import { CreateBorrowingProcessDto, UpdateBorrowingProcessDto } from './dto/borrowing-process.dto';
+import { CreateBorrowingProcessDto } from './dto/borrowing-process.dto';
 import { BorrowersService } from 'src/borrowers/borrowers.service';
 import { BooksService } from 'src/books/books.service';
-import { type, userInfo } from 'os';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
-import e from 'express';
-import { throws } from 'assert';
-import { NotFoundError } from 'rxjs';
-import { isInstance } from 'class-validator';
 
 @Controller('borrowing-processes')
 export class BorrowingProcessesController {
@@ -20,8 +15,10 @@ export class BorrowingProcessesController {
 
   @Post()
   @UseInterceptors(ResponseTransform)
-  async checkout(@Body() body: CreateBorrowingProcessDto) {
-    const borrowerExists = await this.borrowersService.existsById(body.borrowerId);
+  async checkout(@Body() body: CreateBorrowingProcessDto, @Req() request: any) {
+    const borrower: {id: number, email: string} = request.borrower;
+
+    const borrowerExists = await this.borrowersService.existsById(borrower.id);
     if (!borrowerExists)
       throw new NotFoundException("Borrower not found")
 
@@ -29,7 +26,7 @@ export class BorrowingProcessesController {
     if (!bookExists)
       throw new NotFoundException("Book not found")
 
-    const process = await this.borrowingProcessesService.checkout(body);
+    const process = await this.borrowingProcessesService.checkout(body, borrower.id);
     return {
       process,
     }

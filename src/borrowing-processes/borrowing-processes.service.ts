@@ -6,7 +6,7 @@ import { CreateBorrowingProcessDto, UpdateBorrowingProcessDto } from './dto/borr
 export class BorrowingProcessesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async checkout(process: CreateBorrowingProcessDto) {
+  async checkout(process: CreateBorrowingProcessDto, borrowerId: number) {
     if (new Date(process.returnDate) <= new Date())
       throw new BadRequestException("Return Date has to be greater than today")
 
@@ -17,7 +17,7 @@ export class BorrowingProcessesService {
       },
       data: {
         bookId: process.bookId,
-        borrowerId: process.borrowerId,
+        borrowerId: borrowerId,
         borrowingDate: new Date(),
         returnDate: new Date(process.returnDate),
       }

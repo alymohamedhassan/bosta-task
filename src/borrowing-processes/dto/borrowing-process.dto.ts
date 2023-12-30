@@ -5,9 +5,6 @@ export class CreateBorrowingProcessDto {
   @IsNumber({}, {message: 'BookId field has to be a number'})
   bookId: number;
 
-  @IsNumber({}, {message: 'BookId field has to be a number'})
-  borrowerId: number;
-
   @IsDate({message: 'returnDate has to be a valid date'})
   returnDate: Date
 }
