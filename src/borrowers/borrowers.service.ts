@@ -41,8 +41,12 @@ export class BorrowersService {
     });
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} borrower`;
+  async delete(id: number) {
+    return this.prisma.borrower.delete({
+      where: {
+        id: +id,
+      }
+    });
   }
 
   async existsById(id: number) {
