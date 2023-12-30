@@ -1,7 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Buffer } from 'buffer';
-import { trace } from 'console';
-import { decode } from 'punycode';
 import { Observable } from 'rxjs';
 import { PrismaService } from 'src/prisma/prisma.service';
 
