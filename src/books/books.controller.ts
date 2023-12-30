@@ -3,6 +3,7 @@ import { BooksService } from './books.service';
 import { CreateBookDto, UpdateBookDto } from './dto/book.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
 import { AuthorsService } from 'src/authors/authors.service';
+import { Pagination } from 'src/common/dto/pagination';
 
 @Controller('books')
 export class BooksController {
@@ -33,15 +34,17 @@ export class BooksController {
     @Query('size', new DefaultValuePipe(10), ParseIntPipe) size: number,
     @Query('search') search: string, 
   ) {
-    console.log(`Page: ${page}, size: ${size}, search: ${search}`)
-    const books = await this.booksService.findAll(
+    const {books, count} = await this.booksService.findAll(
       page,
       size,
       search
     );
 
+    const pagination = new Pagination(count, {page, size,});
+    
     return {
       books,
+      pagination,
     }
   }
 

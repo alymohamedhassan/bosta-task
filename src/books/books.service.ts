@@ -27,7 +27,25 @@ export class BooksService {
     size: number = 10,
     search?: string,
   ) {
-    return this.prisma.book.findMany({
+    const where = {
+      OR: search ? [
+        {
+          title: {
+            startsWith: search,
+          },
+        },
+        {
+          isbn: search,
+        },
+        {
+          author: {
+            name: search,
+          }
+        },
+      ]: undefined
+    };
+
+    const books = await this.prisma.book.findMany({
       select: {
         id: true,
         title: true,
@@ -36,26 +54,19 @@ export class BooksService {
         shelfLocation: true,
         createdAt: true,
       },
-      where: {
-        OR: search ? [
-          {
-            title: {
-              startsWith: search,
-            },
-          },
-          {
-            isbn: search,
-          },
-          {
-            author: {
-              name: search,
-            }
-          },
-        ]: undefined
-      },
+      where,
       skip: size * (page-1),
       take: size,
     });
+
+    const count = await this.prisma.book.count({
+      where,
+    })
+
+    return {
+      books,
+      count,
+    }
   }
 
   async findOne(id: number) {
