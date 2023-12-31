@@ -3,8 +3,6 @@ import { Workbook } from 'exceljs';
 import { ApiProduces, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BorrowingProcessesService } from './borrowing-processes.service';
 import { CreateBorrowingProcessDto } from './dto/borrowing-process.dto';
-import { BorrowersService } from 'src/borrowers/borrowers.service';
-import { BooksService } from 'src/books/books.service';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
 import { ResponseBorrowingProcessesDto, ResponseSingleBorrowingProcessDto } from './response/api.response';
 
@@ -12,8 +10,6 @@ import { ResponseBorrowingProcessesDto, ResponseSingleBorrowingProcessDto } from
 @Controller('borrowing-processes')
 export class BorrowingProcessesController {
   constructor(
-    private readonly borrowersService: BorrowersService,
-    private readonly booksService: BooksService,
     private readonly borrowingProcessesService: BorrowingProcessesService
   ) {}
 
@@ -26,14 +22,6 @@ export class BorrowingProcessesController {
   @UseInterceptors(ResponseTransform)
   async checkout(@Body() body: CreateBorrowingProcessDto, @Req() request: any) {
     const borrower: {id: number, email: string} = request.borrower;
-
-    const borrowerExists = await this.borrowersService.existsById(borrower.id);
-    if (!borrowerExists)
-      throw new NotFoundException("Borrower not found")
-
-    const bookExists = await this.booksService.existsById(body.bookId);
-    if (!bookExists)
-      throw new NotFoundException("Book not found")
 
     const process = await this.borrowingProcessesService.checkout(body, borrower.id);
     return {

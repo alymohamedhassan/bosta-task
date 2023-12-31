@@ -1,7 +1,7 @@
 import { IsDate, IsNumber } from "class-validator";
 import { ApiProperty } from '@nestjs/swagger';
-import { BookDto } from "src/books/dto/book.dto";
-import { CreateBorrowerDto } from "src/borrowers/dto/borrower.dto";
+import { BookDto } from "../../books/dto/book.dto";
+import { CreateBorrowerDto } from "../../borrowers/dto/borrower.dto";
 
 export class BorrowingProcessDto {
   @ApiProperty()
