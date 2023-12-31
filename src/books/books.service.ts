@@ -78,7 +78,12 @@ export class BooksService {
 
     if (!book) throw new BookNotFoundException()
 
-    const borrowedBooks = 0;
+    const borrowedBooks = await this.prisma.borrowing.count({
+      where: {
+        bookId: id,
+        isReturned: false,
+      }
+    });
     const availableQuantity = book?.totalQuantity? book.totalQuantity - borrowedBooks: 0;
 
     return {
