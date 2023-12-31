@@ -7,6 +7,7 @@ import { BookNotFoundException } from '../books/exceptions/not-found.exception';
 import { BorrowerNotFoundException } from '../borrowers/exceptions/not-found.exception';
 import { NotAvailableException } from './exceptions/not-available.exception';
 import { InvalidReturnDateException } from './exceptions/invalid-returndate.exception';
+import { BorrowerAlreadyBorrowedBookException } from './exceptions/borrower-has-book.exception';
 
 @Injectable()
 export class BorrowingProcessesService {
@@ -16,7 +17,22 @@ export class BorrowingProcessesService {
     private readonly borrowersService: BorrowersService,
   ) {}
 
+  async isBorrowerHasBook(bookId: number, borrowerId: number) {
+    const count = await this.prisma.borrowing.count({
+      where: {
+        bookId,
+        borrowerId,
+        isReturned: false,
+      }
+    })
+    return count > 0;
+  }
+
   async checkout(process: CreateBorrowingProcessDto, borrowerId: number) {
+    const borrowerHasBook = await this.isBorrowerHasBook(process.bookId, borrowerId);
+    if (borrowerHasBook)
+      throw new BorrowerAlreadyBorrowedBookException()
+
     if (new Date(process.returnDate) <= new Date())
       throw new InvalidReturnDateException()
 
