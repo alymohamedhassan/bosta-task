@@ -21,6 +21,8 @@ services:
       DATABASE_URL: postgresql://postgres:example@database:5432/library?schema=public
       REDIS_URL: redis://redis:6379
       RATE_LIMIT_CHECKOUT: 10
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: admin
     build:
       context: .
       target: production
