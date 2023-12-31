@@ -19,3 +19,19 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
 
+  pgadmin:
+    user: root
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      - PGADMIN_CONFIG_SERVER_MODE=True
+      - PGADMIN_DEFAULT_EMAIL=admin@hotmail.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_LISTEN_PORT=5050
+    ports:
+      - "5050:5050"
+    volumes:
+      - ../data/pgadmin-backup/storage:/var/lib/pgadmin/storage
+    networks:
+      - local-network
