@@ -6,6 +6,10 @@ import { Redis } from 'ioredis';
 
 const includedRoutes = [
   {
+    path: 'borrowers',
+    methods: ['POST']
+  },
+  {
     path: 'borrowing-process',
     methods: ['POST']
   },
