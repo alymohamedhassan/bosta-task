@@ -6,6 +6,7 @@ import { Pagination } from 'src/common/dto/pagination';
 import { BorrowingProcessesService } from 'src/borrowing-processes/borrowing-processes.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseBorrowersDto, ResponseBorrowingsDto, ResponseSingleBorrowerDto } from './response/api.response';
+import { BorrowerNotFoundException } from './exceptions/not-found.exception';
 
 @ApiTags('Borrowers')
 @Controller('borrowers')
@@ -67,7 +68,7 @@ export class BorrowersController {
   async findOne(@Param('id', ParseIntPipe) id: string) {
     const exists = await this.borrowersService.existsById(+id);
     if (!exists)
-      throw new NotFoundException("Borrower not found")
+      throw new BorrowerNotFoundException()
 
     const borrower = await this.borrowersService.findOne(+id);
     return {
@@ -85,7 +86,7 @@ export class BorrowersController {
   async findBorrowings(@Param('id', ParseIntPipe) id: string, @Req() request: any) {
     const exists = await this.borrowersService.existsById(+id);
     if (!exists)
-      throw new NotFoundException("Borrower not found")
+      throw new BorrowerNotFoundException()
 
     const borrower = await this.borrowingsService.findAll(false, +id);
     return {
@@ -103,7 +104,7 @@ export class BorrowersController {
   async update(@Param('id', ParseIntPipe) id: string, @Body() body: UpdateBorrowerDto) {
     const exists = await this.borrowersService.existsById(+id);
     if (!exists) 
-      throw new NotFoundException("Borrower not found")
+      throw new BorrowerNotFoundException()
 
     return this.borrowersService.update(+id, body);
   }
@@ -118,7 +119,7 @@ export class BorrowersController {
   async delete(@Param('id', ParseIntPipe) id: string) {
     const exists = await this.borrowersService.existsById(+id);
     if (!exists) 
-      throw new NotFoundException("Borrower not found")
+      throw new BorrowerNotFoundException()
 
     return this.borrowersService.delete(+id);
   }
