@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBorrowerDto, UpdateBorrowerDto } from './dto/borrower.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { BorrowerNotFoundException } from './exceptions/not-found.exception';
 
 @Injectable()
 export class BorrowersService {
@@ -47,6 +48,10 @@ export class BorrowersService {
   }
 
   async delete(id: number) {
+    const borrowerExists = await this.existsById(+id);
+    if (!borrowerExists) 
+      throw new BorrowerNotFoundException()
+
     return this.prisma.borrower.delete({
       where: {
         id: +id,

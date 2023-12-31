@@ -118,10 +118,6 @@ export class BorrowersController {
   @UseInterceptors(ResponseTransform)
   @HttpCode(204)
   async delete(@Param('id', ParseIntPipe) id: string) {
-    const exists = await this.borrowersService.existsById(+id);
-    if (!exists) 
-      throw new BorrowerNotFoundException()
-
     return this.borrowersService.delete(+id);
   }
 }
