@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    return this.validateRequest(request) || routeMatching(request, allowedRoutes);
+    return routeMatching(request, allowedRoutes) || this.validateRequest(request);
   }
 
   decode(encoding: string): string {
