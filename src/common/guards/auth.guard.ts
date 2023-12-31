@@ -17,6 +17,10 @@ const allowedRoutes = [
 
 const adminRoutes = [
   {
+    path: 'borrowers',
+    methods: ['POST', 'PATCH', 'DELETE']
+  },
+  {
     path: 'borrowing-process',
     methods: ['GET']
   },
