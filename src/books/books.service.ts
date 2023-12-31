@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBookDto, UpdateBookDto } from './dto/book.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { BookNotFoundException } from './exceptions/not-found.exception';
 
 @Injectable()
 export class BooksService {
@@ -75,8 +76,10 @@ export class BooksService {
       }
     });
 
+    if (!book) throw new BookNotFoundException()
+
     const borrowedBooks = 0;
-    const availableQuantity = book.totalQuantity - borrowedBooks;
+    const availableQuantity = book?.totalQuantity? book.totalQuantity - borrowedBooks: 0;
 
     return {
       ...book,
