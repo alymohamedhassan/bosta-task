@@ -7,7 +7,7 @@ import { routeMatching } from '../utils/route-matching';
 const allowedRoutes = [
   {
     path: 'borrowers',
-    methods: ['POST']
+    methods: ['GET', 'POST']
   },
   {
     path: 'books',
