@@ -20,7 +20,6 @@ export class CreateBookDto {
 
   @ApiProperty({minimum: 0})
   @IsNumber({}, {message: 'Total Quantity has to be a positive number'})
-  @IsInt({message: 'Total Quantity has to be an integer'})
   totalQuantity: number;
 }
 
