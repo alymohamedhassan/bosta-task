@@ -7,6 +7,7 @@ import { BookNotFoundException } from '../books/exceptions/not-found.exception';
 import { BorrowerNotFoundException } from '../borrowers/exceptions/not-found.exception';
 import { NotAvailableException } from './exceptions/not-available.exception';
 import { InvalidReturnDateException } from './exceptions/invalid-returndate.exception';
+import {faker} from '@faker-js/faker'
 
 describe('BorrowingProcessesService', () => {
   let service: BorrowingProcessesService;
@@ -70,14 +71,14 @@ describe('BorrowingProcessesService', () => {
     const {borrowers} = await borrowersService.findAll(1, 1);
 
     const author = await prisma.author.create({
-      data: {name: 'Author' + String(new Date().getMilliseconds())}
+      data: {name: faker.person.fullName()},
     });
     const authorId = author.id;
 
     const book = await booksService.create({
-      title: 'Demo test not available to checkout' + String(new Date().getMilliseconds()),
+      title: faker.word.noun(),
       authorId,
-      isbn: String(new Date().getMilliseconds()),
+      isbn: String(faker.number.int({min: 1111111111111, max: 9999999999999})),
       shelfLocation: 'LKI-098',
       totalQuantity: 0,
     });
@@ -101,14 +102,14 @@ describe('BorrowingProcessesService', () => {
     const {borrowers} = await borrowersService.findAll(1, 1);
 
     const author = await prisma.author.create({
-      data: {name: 'Author' + String(new Date().getMilliseconds())}
+      data: {name: faker.person.fullName()}
     });
     const authorId = author.id;
 
     const book = await booksService.create({
-      title: 'Demo test available to checkout' + String(new Date().getMilliseconds()),
+      title: faker.word.noun(),
       authorId,
-      isbn: String(new Date().getMilliseconds()),
+      isbn: String(faker.number.int({min: 1111111111111, max: 9999999999999})),
       shelfLocation: 'LKI-098',
       totalQuantity: 1,
     });
@@ -132,21 +133,21 @@ describe('BorrowingProcessesService', () => {
     const {borrowers} = await borrowersService.findAll(1, 1);
 
     const author = await prisma.author.create({
-      data: {name: 'Author' + String(new Date().getMilliseconds())}
+      data: {name: faker.person.fullName()}
     });
 
     const authorId = author.id;
-    const title = 'Demo test available to checkout' + String(new Date().getMilliseconds());
-    const isbn = String(new Date().getMilliseconds());
+    const title = faker.word.noun();
+    const isbn = String(faker.number.int({min: 9781111111111, max: 9999999999999}));
     const shelfLocation = 'LKI-098';
     const totalQuantity = 1
 
     const book = await booksService.create({
-      title: 'Demo test available to checkout' + String(new Date().getMilliseconds()),
+      title,
       authorId,
-      isbn: String(new Date().getMilliseconds()),
-      shelfLocation: 'LKI-098',
-      totalQuantity: 1,
+      isbn,
+      shelfLocation,
+      totalQuantity,
     });
 
     const result = {
