@@ -18,12 +18,20 @@ export class BorrowersService {
     });
   }
 
-  async findAll(page: number = 1, size: number = 10) {
+  async findAll(page: number = 1, size: number = 10, deleted: boolean = false) {
+    const deletedCondition = deleted? {NOT: {deletedAt: null}}: {deletedAt: null};
     const borrowers = await this.prisma.borrower.findMany({
+      where: {
+        ...deletedCondition,
+      },
       skip: size * (page-1),
       take: size,
     });
-    const count = await this.prisma.borrower.count()
+    const count = await this.prisma.borrower.count({
+      where: {
+        ...deletedCondition,
+      }
+    })
     return {borrowers, count}
   }
 
@@ -52,9 +60,12 @@ export class BorrowersService {
     if (!borrowerExists) 
       throw new BorrowerNotFoundException()
 
-    return this.prisma.borrower.delete({
+    return this.prisma.borrower.update({
       where: {
         id: +id,
+      },
+      data: {
+        deletedAt: new Date()
       }
     });
   }

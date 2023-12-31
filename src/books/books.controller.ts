@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, NotFoundException, BadRequestException, HttpCode, Query, ParseIntPipe, DefaultValuePipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, NotFoundException, BadRequestException, HttpCode, Query, ParseIntPipe, DefaultValuePipe, ParseBoolPipe } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto, UpdateBookDto } from './dto/book.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
@@ -45,12 +45,14 @@ export class BooksController {
   async findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('size', new DefaultValuePipe(10), ParseIntPipe) size: number,
+    @Query('deleted', new DefaultValuePipe(false), ParseBoolPipe) deleted: boolean,
     @Query('search') search: string, 
   ) {
     const {books, count} = await this.booksService.findAll(
       page,
       size,
-      search
+      search,
+      deleted,
     );
 
     const pagination = new Pagination(count, {page, size,});

@@ -26,7 +26,9 @@ export class BooksService {
     page: number = 1,
     size: number = 10,
     search?: string,
+    deleted: boolean = false,
   ) {
+    const deletedCondition = deleted? {NOT: {deletedAt: null}}: {deletedAt: null};
     const where = {
       OR: search ? [
         {
@@ -42,7 +44,8 @@ export class BooksService {
             name: search,
           }
         },
-      ]: undefined
+      ]: undefined,
+      ...deletedCondition,
     };
 
     const books = await this.prisma.book.findMany({
@@ -109,9 +112,12 @@ export class BooksService {
   }
 
   async delete(id: number) {
-    return this.prisma.book.delete({
+    return this.prisma.book.update({
       where: {
         id: +id,
+      },
+      data: {
+        deletedAt: new Date(),
       },
     });
   }
