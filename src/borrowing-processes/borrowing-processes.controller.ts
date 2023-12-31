@@ -6,7 +6,7 @@ import { CreateBorrowingProcessDto } from './dto/borrowing-process.dto';
 import { BorrowersService } from 'src/borrowers/borrowers.service';
 import { BooksService } from 'src/books/books.service';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
-import { ResponseBorrowingProcessesDto, ResponseExportExcelDto, ResponseSingleBorrowingProcessDto } from './response/api.response';
+import { ResponseBorrowingProcessesDto, ResponseSingleBorrowingProcessDto } from './response/api.response';
 
 @ApiTags('Borrowing Processes')
 @Controller('borrowing-processes')
@@ -77,7 +77,7 @@ export class BorrowingProcessesController {
   }
 
   @Get('/export')
-  @ApiProduces('application/xlsx')
+  @ApiProduces('application/vnd.ms-excel')
   @ApiQuery({
     name: 'report',
     required: true,

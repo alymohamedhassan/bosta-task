@@ -11,7 +11,3 @@ export class ResponseBorrowingProcessesDto {
   borrowingProcesses: BorrowingProcessDto[];
 }
 
-export class ResponseExportExcelDto {
-  @ApiProperty({type: 'object', items: {type: 'string', format: 'application/xlsx'}})
-  excel: string;
-}
