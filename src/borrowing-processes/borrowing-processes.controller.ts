@@ -110,11 +110,23 @@ export class BorrowingProcessesController {
       }
     }
 
-    const borrowingProcesses = await this.borrowingProcessesService.findAll(
+    let borrowingProcesses = await this.borrowingProcessesService.findAll(
       report === "is_overdue_only"? true: undefined, 
       null,
       timeframe, 
     );
+    borrowingProcesses = borrowingProcesses.map((borrowing) => {
+      return {
+        id: borrowing.id,
+        bookId: borrowing.bookId,
+        bookName: borrowing.book.title,
+        borrowerId: borrowing.borrowerId,
+        borrowerName: borrowing.borrower.name,
+        returnDate: borrowing.returnDate,
+        borrowingDate: borrowing.borrowingDate,
+        isReturned: borrowing.isReturned,
+      }
+    })
 
     const workbook = new  Workbook()
     const worksheet = workbook.addWorksheet('export-borrowing-with-dates')

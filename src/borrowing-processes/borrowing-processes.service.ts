@@ -98,18 +98,7 @@ export class BorrowingProcessesService {
         id: 'asc',
       }
     });
-    return borrowings.map((borrowing) => {
-      return {
-        id: borrowing.id,
-        bookId: borrowing.bookId,
-        bookName: borrowing.book.title,
-        borrowerId: borrowing.borrowerId,
-        borrowerName: borrowing.borrower.name,
-        returnDate: borrowing.returnDate,
-        borrowingDate: borrowing.borrowingDate,
-        isReturned: borrowing.isReturned,
-      }
-    })
+    return borrowings;
   }
 
   async exists(id: number) {
