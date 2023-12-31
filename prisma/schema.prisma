@@ -29,6 +29,7 @@ model book {
   authorId  Int
   createdAt DateTime @default(now())
 
+  deletedAt DateTime?
   borrowings borrowing[]
 
   @@index([title, isbn, authorId])
@@ -40,6 +41,7 @@ model borrower {
   email        String   @unique
   passwordHash String
   createdAt    DateTime @default(now())
+  deletedAt DateTime?
 
   borrowings borrowing[]
 }
@@ -55,6 +57,7 @@ model borrowing {
   borrowingDate DateTime
   returnDate    DateTime
 
+  deletedAt DateTime?
   isReturned Boolean  @default(false)
   createdAt  DateTime @default(now())
 }
