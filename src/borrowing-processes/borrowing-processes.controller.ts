@@ -110,12 +110,12 @@ export class BorrowingProcessesController {
       }
     }
 
-    let borrowingProcesses = await this.borrowingProcessesService.findAll(
+    const borrowingProcesses = await this.borrowingProcessesService.findAll(
       report === "is_overdue_only"? true: undefined, 
       null,
       timeframe, 
     );
-    borrowingProcesses = borrowingProcesses.map((borrowing) => {
+    const borrowingProcessesRemap = borrowingProcesses.map((borrowing) => {
       return {
         id: borrowing.id,
         bookId: borrowing.bookId,
@@ -140,7 +140,7 @@ export class BorrowingProcessesController {
         { header: 'Return Date', key: 'returnDate'},
     ]
 
-    borrowingProcesses.forEach((val,i,_) => {
+    borrowingProcessesRemap.forEach((val,i,_) => {
         worksheet.addRow(val)
     })
 
