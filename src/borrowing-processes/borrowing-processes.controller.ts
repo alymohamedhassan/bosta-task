@@ -1,11 +1,13 @@
 import { Controller, Get, Post, Body, Param, Req, NotFoundException, UseInterceptors, Put, ParseIntPipe, Query, ParseBoolPipe, DefaultValuePipe, Res } from '@nestjs/common';
+import { Workbook } from 'exceljs';
+import { ApiTags } from '@nestjs/swagger';
 import { BorrowingProcessesService } from './borrowing-processes.service';
 import { CreateBorrowingProcessDto } from './dto/borrowing-process.dto';
 import { BorrowersService } from 'src/borrowers/borrowers.service';
 import { BooksService } from 'src/books/books.service';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
-import { Workbook } from 'exceljs';
 
+@ApiTags('Borrowing Processes')
 @Controller('borrowing-processes')
 export class BorrowingProcessesController {
   constructor(

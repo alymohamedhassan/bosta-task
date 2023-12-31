@@ -4,7 +4,9 @@ import { CreateBorrowerDto, UpdateBorrowerDto } from './dto/borrower.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
 import { Pagination } from 'src/common/dto/pagination';
 import { BorrowingProcessesService } from 'src/borrowing-processes/borrowing-processes.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Borrowers')
 @Controller('borrowers')
 export class BorrowersController {
   constructor(

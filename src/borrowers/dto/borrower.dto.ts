@@ -1,9 +1,23 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateBorrowerDto {
+  @ApiProperty()
   name: string;
+
+  @ApiProperty()
   email: string;
+
+  @ApiProperty()
   password: string;
 }
 
-export class UpdateBorrowerDto extends PartialType(CreateBorrowerDto) {}
+export class UpdateBorrowerDto {
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  password: string;
+}

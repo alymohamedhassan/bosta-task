@@ -2,7 +2,9 @@ import { BadRequestException, Body, Controller, Delete, Get, HttpCode, NotFoundE
 import { AuthorsService } from './authors.service';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
 import { CreateAuthorDto } from './dto/create-author.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Authors')
 @Controller('authors')
 export class AuthorsController {
   constructor(private readonly authorsService: AuthorsService) {}

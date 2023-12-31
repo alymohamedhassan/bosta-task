@@ -1,10 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, NotFoundException, BadRequestException, HttpCode, Query, ParseIntPipe, DefaultValuePipe } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { CreateBookDto, UpdateBookDto } from './dto/book.dto';
+import { BookDto, CreateBookDto, UpdateBookDto } from './dto/book.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
 import { AuthorsService } from 'src/authors/authors.service';
 import { Pagination } from 'src/common/dto/pagination';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ResponseDto } from 'src/common/dto/response.dto';
 
+@ApiTags('Books')
 @Controller('books')
 export class BooksController {
   constructor(
@@ -13,6 +16,11 @@ export class BooksController {
   ) {}
 
   @Post()
+  @ApiResponse({
+    description: 'Create new book',
+    status: 201,
+    type: ResponseDto<{book: BookDto}>,
+  })
   @UseInterceptors(ResponseTransform)
   @HttpCode(201)
   async create(@Body() book: CreateBookDto) {
