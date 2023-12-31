@@ -38,7 +38,6 @@ export class AuthGuard implements CanActivate {
     if (routeMatching(request, adminRoutes)) 
       return this.validateAdminRequest(request)
     
-    
     return this.validateRequest(request);
   }
 
