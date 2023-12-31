@@ -31,11 +31,22 @@ case $key in
     PROD=1
     shift
     ;;
+    --seed)
+    SEED=1
+    shift
+    ;;
 esac
 done
 
 npx prisma generate
 npx prisma migrate deploy
+
+if [ -n "${SEED}" ] && [ ! -f /usr/src/app/.seeded ]; then
+  echo "Adding seed data"
+  npx prisma db seed
+  touch /usr/src/app/.seeded
+  echo "Seed data added"
+fi
 
 if [ -n "${DEV}" ]
 then
