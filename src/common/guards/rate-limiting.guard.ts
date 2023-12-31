@@ -25,10 +25,10 @@ export class RateLimitGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     if (!routeMatching(request, includedRoutes)) return true;
 
-    return this.validateRequest(request);
+    return this.validateRequest();
   }
 
-  async validateRequest(request: any) {
+  async validateRequest() {
     const now = new Date()
     const time = String(now.toISOString()).split(":");
     const timeTillMins = time.filter((value) => value != time[time.length - 1]).join(":");
