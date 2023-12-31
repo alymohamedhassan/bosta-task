@@ -37,7 +37,6 @@ export class RateLimitGuard implements CanActivate {
     await this.redis.set(String(timeTillMins), String((parseInt(old) || 0) + 1));
 
     const newBucket = await this.redis.get(String(timeTillMins));
-    console.log("New:", newBucket);
 
     if (parseInt(newBucket) >= parseInt(process.env.RATE_LIMIT_CHECKOUT))
       throw new HttpException("Too many requests", HttpStatus.TOO_MANY_REQUESTS)

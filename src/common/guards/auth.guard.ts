@@ -60,8 +60,6 @@ export class AuthGuard implements CanActivate {
     const adminUsername = process.env.ADMIN_USERNAME;
     const adminPassword = process.env.ADMIN_PASSWORD;
 
-    console.log("Admin:", adminUsername === email && adminPassword === password)
-
     if (adminUsername === email && adminPassword === password)
       return true
 
