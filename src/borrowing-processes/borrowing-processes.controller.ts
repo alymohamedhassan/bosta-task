@@ -146,7 +146,10 @@ export class BorrowingProcessesController {
 
     const buffer = await workbook.xlsx.writeBuffer()
 
-    return res.set('Content-Disposition', `attachment; filename=example.xlsx`).send(buffer)
+    return res
+      .set('Content-Disposition', `attachment; filename=Export.xlsx`)
+      .set('Contet-Type', 'application/vnd.ms-excel')
+      .send(buffer)
   }
 
 }
