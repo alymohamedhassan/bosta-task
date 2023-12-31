@@ -4,8 +4,9 @@ import { BookDto, CreateBookDto, UpdateBookDto } from './dto/book.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
 import { AuthorsService } from 'src/authors/authors.service';
 import { Pagination } from 'src/common/dto/pagination';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { ResponseDto } from 'src/common/dto/response.dto';
+import { ResponseBooksDto, ResponseSingleBookDto } from './response/api.response';
 
 @ApiTags('Books')
 @Controller('books')
@@ -16,10 +17,10 @@ export class BooksController {
   ) {}
 
   @Post()
-  @ApiResponse({
+  @ApiOkResponse({
     description: 'Create new book',
     status: 201,
-    type: ResponseDto<{book: BookDto}>,
+    type: ResponseSingleBookDto,
   })
   @UseInterceptors(ResponseTransform)
   @HttpCode(201)
@@ -36,6 +37,11 @@ export class BooksController {
   }
 
   @Get()
+  @ApiOkResponse({
+    description: 'List books',
+    status: 200,
+    type: ResponseBooksDto,
+  })
   @UseInterceptors(ResponseTransform)
   async findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -57,6 +63,11 @@ export class BooksController {
   }
 
   @Get(':id')
+  @ApiOkResponse({
+    description: 'Get Single Book by id',
+    status: 200,
+    type: ResponseSingleBookDto,
+  })
   @UseInterceptors(ResponseTransform)
   async findOne(@Param('id') id: string) {
     const book = await this.booksService.findOne(+id);
@@ -66,6 +77,10 @@ export class BooksController {
   }
 
   @Patch(':id')
+  @ApiOkResponse({
+    description: 'Update Book',
+    status: 204,
+  })
   @UseInterceptors(ResponseTransform)
   @HttpCode(204)
   async update(@Param('id') id: string, @Body() book: UpdateBookDto) {
@@ -83,6 +98,10 @@ export class BooksController {
   }
 
   @Delete(':id')
+  @ApiOkResponse({
+    description: 'Delete Book by id',
+    status: 204,
+  })
   @HttpCode(204)
   @UseInterceptors(ResponseTransform)
   async remove(@Param('id') id: string) {
