@@ -1,11 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, NotFoundException, BadRequestException, HttpCode, Query, ParseIntPipe, DefaultValuePipe } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { BookDto, CreateBookDto, UpdateBookDto } from './dto/book.dto';
+import { CreateBookDto, UpdateBookDto } from './dto/book.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
 import { AuthorsService } from 'src/authors/authors.service';
 import { Pagination } from 'src/common/dto/pagination';
-import { ApiOkResponse, ApiProperty, ApiTags } from '@nestjs/swagger';
-import { ResponseDto } from 'src/common/dto/response.dto';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseBooksDto, ResponseSingleBookDto } from './response/api.response';
 
 @ApiTags('Books')
