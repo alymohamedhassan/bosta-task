@@ -8,6 +8,7 @@ import { BorrowerNotFoundException } from '../borrowers/exceptions/not-found.exc
 import { NotAvailableException } from './exceptions/not-available.exception';
 import { InvalidReturnDateException } from './exceptions/invalid-returndate.exception';
 import {faker} from '@faker-js/faker'
+import { BorrowerAlreadyBorrowedBookException } from './exceptions/borrower-has-book.exception';
 
 describe('BorrowingProcessesService', () => {
   let service: BorrowingProcessesService;
@@ -94,6 +95,44 @@ describe('BorrowingProcessesService', () => {
       throw new Error("Available to checkout")
     } catch (error) {
       expect(error).toBeInstanceOf(NotAvailableException)
+    }
+  });
+  
+  it('Checkout - borrower already has book', async () => {
+    const expectedReturnDate = new Date().setDate(new Date().getDate() + 2);
+    const {borrowers} = await borrowersService.findAll(1, 1);
+
+    const author = await prisma.author.create({
+      data: {name: faker.person.fullName()}
+    });
+    const authorId = author.id;
+
+    const book = await booksService.create({
+      title: faker.word.noun(),
+      authorId,
+      isbn: String(faker.number.int({min: 1111111111111, max: 9999999999999})),
+      shelfLocation: 'LKI-098',
+      totalQuantity: 1,
+    });
+
+    try {
+      await service.checkout(
+        {
+          bookId: book.id, 
+          returnDate: new Date(expectedReturnDate),
+        }, 
+        borrowers[0].id,
+      )
+      await service.checkout(
+        {
+          bookId: book.id, 
+          returnDate: new Date(expectedReturnDate),
+        }, 
+        borrowers[0].id,
+      )
+      throw new Error("Available to checkout")
+    } catch (error) {
+      expect(error).toBeInstanceOf(BorrowerAlreadyBorrowedBookException)
     }
   });
   
