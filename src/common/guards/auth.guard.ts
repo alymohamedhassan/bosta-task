@@ -11,7 +11,14 @@ const allowedRoutes = [
   },
   {
     path: 'books',
-    methods: ['GET', 'POST', 'PATCH', 'DELETE']
+    methods: ['GET']
+  },
+]
+
+const adminRoutes = [
+  {
+    path: 'books',
+    methods: ['POST', 'PATCH', 'DELETE']
   },
 ]
 
@@ -23,11 +30,43 @@ export class AuthGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    return routeMatching(request, allowedRoutes) || this.validateRequest(request);
+
+    // Check if the routes is allowed without any admin privileges, move forward
+    if (routeMatching(request, allowedRoutes)) return true;
+
+    // Check if username is admin_username from env validate on that
+    if (routeMatching(request, adminRoutes)) 
+      return this.validateAdminRequest(request)
+    
+    
+    return this.validateRequest(request);
   }
 
   decode(encoding: string): string {
     return Buffer.from(encoding, 'base64').toString('ascii');
+  }
+
+  async validateAdminRequest(request: any) {
+    const authorization = request.headers.authorization;
+    if (!authorization?.split(" ")) {
+      return false;
+    }
+
+    const token = authorization.split(" ")[1]
+
+    const decoded = this.decode(token)
+    const email = decoded.split(":")[0]
+    const password = decoded.split(":")[1]
+
+    const adminUsername = process.env.ADMIN_USERNAME;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    console.log("Admin:", adminUsername === email && adminPassword === password)
+
+    if (adminUsername === email && adminPassword === password)
+      return true
+
+    return false;
   }
 
   async validateRequest(request: any) {
