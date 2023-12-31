@@ -8,7 +8,7 @@ export class CreateBorrowerDto {
 
   @ApiProperty()
   @IsString({message: 'Email has to be a string'})
-  @IsEmail({message: 'Email not valid'})
+  @IsEmail()
   email: string;
 
   @ApiProperty()
@@ -23,7 +23,7 @@ export class UpdateBorrowerDto {
 
   @ApiProperty()
   @IsString({message: 'Email has to be a string'})
-  @IsEmail({message: 'Email not valid'})
+  @IsEmail()
   email: string;
 
   @ApiProperty()
