@@ -2,7 +2,8 @@ import { BadRequestException, Body, Controller, Delete, Get, HttpCode, NotFoundE
 import { AuthorsService } from './authors.service';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
 import { CreateAuthorDto } from './dto/create-author.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ResponseAuthorsDto, ResponseSingleAuthorDto } from './response/api.response';
 
 @ApiTags('Authors')
 @Controller('authors')
@@ -10,6 +11,11 @@ export class AuthorsController {
   constructor(private readonly authorsService: AuthorsService) {}
 
   @Post()
+  @ApiResponse({
+    description: 'Create Author',
+    status: 201,
+    type: ResponseSingleAuthorDto,
+  })
   @UseInterceptors(ResponseTransform)
   @HttpCode(201)
   async create(@Body() author: CreateAuthorDto) {
@@ -23,6 +29,11 @@ export class AuthorsController {
   }
 
   @Get()
+  @ApiResponse({
+    description: 'List Authors',
+    status: 200,
+    type: ResponseAuthorsDto,
+  })
   @UseInterceptors(ResponseTransform)
   async findAll() {
     const authors = await this.authorsService.findAll()
@@ -32,6 +43,11 @@ export class AuthorsController {
   }
 
   @Get(':id')
+  @ApiResponse({
+    description: 'Get Single Author by id',
+    status: 200,
+    type: ResponseSingleAuthorDto,
+  })
   @UseInterceptors(ResponseTransform)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const author = await this.authorsService.findOne(+id)
@@ -44,6 +60,10 @@ export class AuthorsController {
   }
 
   @Patch(':id')
+  @ApiResponse({
+    description: 'Update Author',
+    status: 204,
+  })
   @UseInterceptors(ResponseTransform)
   @HttpCode(204)
   async update(@Param('id', ParseIntPipe) id: number, @Body() author: CreateAuthorDto) {
@@ -62,6 +82,10 @@ export class AuthorsController {
   }
 
   @Delete(':id')
+  @ApiResponse({
+    description: 'Delete Author',
+    status: 204,
+  })
   @UseInterceptors(ResponseTransform)
   @HttpCode(204)
   async delete(@Param('id', ParseIntPipe) id: number) {

@@ -4,7 +4,8 @@ import { CreateBorrowerDto, UpdateBorrowerDto } from './dto/borrower.dto';
 import { ResponseTransform } from 'src/common/interceptors/response.interceptor';
 import { Pagination } from 'src/common/dto/pagination';
 import { BorrowingProcessesService } from 'src/borrowing-processes/borrowing-processes.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ResponseBorrowersDto, ResponseBorrowingsDto, ResponseSingleBorrowerDto } from './response/api.response';
 
 @ApiTags('Borrowers')
 @Controller('borrowers')
@@ -15,6 +16,11 @@ export class BorrowersController {
   ) {}
 
   @Post()
+  @ApiResponse({
+    description: 'Create Borrower',
+    status: 201,
+    type: ResponseSingleBorrowerDto,
+  })
   @UseInterceptors(ResponseTransform)
   @HttpCode(201)
   async create(@Body() body: CreateBorrowerDto) {
@@ -30,6 +36,11 @@ export class BorrowersController {
   }
 
   @Get()
+  @ApiResponse({
+    description: 'List All Borrowers',
+    status: 200,
+    type: ResponseBorrowersDto,
+  })
   @UseInterceptors(ResponseTransform)
   async findAll(
     @Query('page', new DefaultValuePipe(1) , ParseIntPipe) page: number,
@@ -47,6 +58,11 @@ export class BorrowersController {
   }
 
   @Get(':id')
+  @ApiResponse({
+    description: 'List All Borrowers',
+    status: 200,
+    type: ResponseSingleBorrowerDto,
+  })
   @UseInterceptors(ResponseTransform)
   async findOne(@Param('id', ParseIntPipe) id: string) {
     const exists = await this.borrowersService.existsById(+id);
@@ -60,6 +76,11 @@ export class BorrowersController {
   }
 
   @Get(':id/borrowings')
+  @ApiResponse({
+    description: 'List Borrower\'s borrowings',
+    status: 200,
+    type: ResponseBorrowingsDto,
+  })
   @UseInterceptors(ResponseTransform)
   async findBorrowings(@Param('id', ParseIntPipe) id: string, @Req() request: any) {
     const authBorrower: {id: number, email: string} = request.borrower;
@@ -77,6 +98,10 @@ export class BorrowersController {
   }
 
   @Patch(':id')
+  @ApiResponse({
+    description: 'Update Borrower',
+    status: 204,
+  })
   @UseInterceptors(ResponseTransform)
   @HttpCode(204)
   async update(@Param('id', ParseIntPipe) id: string, @Body() body: UpdateBorrowerDto) {
@@ -88,6 +113,10 @@ export class BorrowersController {
   }
 
   @Delete(':id')
+  @ApiResponse({
+    description: 'Delete Borrower by id',
+    status: 204,
+  })
   @UseInterceptors(ResponseTransform)
   @HttpCode(204)
   async delete(@Param('id', ParseIntPipe) id: string) {

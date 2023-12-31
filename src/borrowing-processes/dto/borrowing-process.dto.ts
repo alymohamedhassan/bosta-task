@@ -1,6 +1,20 @@
 import { IsDate, IsNumber } from "class-validator";
 import { ApiProperty } from '@nestjs/swagger';
 
+export class BorrowingProcessDto {
+  @ApiProperty()
+  bookId: number;
+
+  @ApiProperty()
+  borrowerId: number;
+
+  @ApiProperty()
+  returnDate: Date;
+
+  @ApiProperty()
+  borrowingDate: Date;
+}
+
 export class CreateBorrowingProcessDto {
   @ApiProperty()
   @IsNumber({}, {message: 'BookId field has to be a number'})

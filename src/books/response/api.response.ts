@@ -9,7 +9,7 @@ export class ResponseSingleBookDto {
 
 export class ResponseBooksDto {
   @ApiProperty()
-  book: BookDto;
+  books: BookDto;
 
   @ApiProperty()
   pagination: Pagination
