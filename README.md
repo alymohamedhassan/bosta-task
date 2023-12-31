@@ -4,7 +4,9 @@
 # Setup
 ## Development Mode
 
+##### I recommend using the Development mode to load seed data automatically.
 ```$ docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build -d```
+
 
 ## Production mode
 
