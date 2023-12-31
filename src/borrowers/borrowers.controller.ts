@@ -83,10 +83,6 @@ export class BorrowersController {
   })
   @UseInterceptors(ResponseTransform)
   async findBorrowings(@Param('id', ParseIntPipe) id: string, @Req() request: any) {
-    const authBorrower: {id: number, email: string} = request.borrower;
-    if (authBorrower.id !== +id)
-      throw new ForbiddenException()
-
     const exists = await this.borrowersService.existsById(+id);
     if (!exists)
       throw new NotFoundException("Borrower not found")
