@@ -7,6 +7,7 @@ import { BorrowingProcessesService } from 'src/borrowing-processes/borrowing-pro
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseBorrowersDto, ResponseBorrowingsDto, ResponseSingleBorrowerDto } from './response/api.response';
 import { BorrowerNotFoundException } from './exceptions/not-found.exception';
+import { BorrowerAlreadyExistsException } from './exceptions/borrower-exists.exception';
 
 @ApiTags('Borrowers')
 @Controller('borrowers')
@@ -27,7 +28,7 @@ export class BorrowersController {
   async create(@Body() body: CreateBorrowerDto) {
     const exists = await this.borrowersService.existsByEmail(body.email);
     if (exists) 
-      throw new BadRequestException("Borrower already exists, duplicate record (email) has to be unique")
+      throw new BorrowerAlreadyExistsException()
 
     const borrower = await this.borrowersService.create(body);
 
